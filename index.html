@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akbar Putra | Freelance Product Builder</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+
+    <!-- Google Fonts: Plus Jakarta Sans & IBM Plex Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Colors */
+            --color-midnight-ink: #000000;
+            --color-canvas-white: #ffffff;
+            --color-desert-dune: #d7cecc;
+            --color-cloud-gray: #f6f5f5;
+            --color-slate-gray: #afaeae;
+
+            /* Typography */
+            --font-primary: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+            /* Spacing & Layout */
+            --spacing-8: 8px;
+            --spacing-16: 16px;
+            --spacing-24: 24px;
+            --spacing-48: 48px;
+            --section-gap: 48px;
+
+            /* Radii */
+            --radius-cards: 16px;
+            --radius-buttons: 999px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-canvas-white);
+            color: var(--color-midnight-ink);
+            font-family: var(--font-primary);
+            margin: 0;
+            padding: var(--spacing-48) var(--spacing-16);
+            display: flex;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            /* Ditambahkan untuk canvas background */
+        }
+
+        /* --- Background Canvas --- */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.4; /* Sedikit dinaikkan transparansinya agar matrix grid lebih tegas */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--section-gap);
+            position: relative;
+            /* Memastikan konten berada di atas canvas */
+            z-index: 1;
+        }
+
+        /* --- Profile Section --- */
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            position: relative;
+        }
+
+        .profile-info-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            /* Ubah ke flex-start untuk profil Threads */
+        }
+
+        .profile-text-content {
+            flex: 1;
+            padding-right: var(--spacing-16);
+        }
+
+        .profile-img {
+            width: 84px;
+            /* Ukuran avatar khas Threads (agak lebih kecil dari Twitter) */
+            height: 84px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: var(--color-canvas-white);
+            /* Hilangkan border tebal */
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .text-heading-sm {
+            font-size: 32px;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            margin: 0 0 4px 0;
+        }
+
+        /* Username bergaya Threads (badge abu-abu kecil di samping atau bawah nama) */
+        .text-handle {
+            font-size: 13px;
+            font-family: var(--font-mono);
+            /* Terapkan font monospace di handle */
+            color: var(--color-slate-gray);
+            margin: 0 0 var(--spacing-16) 0;
+            display: inline-block;
+            /* background-color: var(--color-cloud-gray); */
+            /* padding: 4px 8px; */
+            /* border-radius: var(--radius-buttons); */
+        }
+
+        .text-body {
+            font-size: 18px;
+            line-height: 1.5;
+            font-weight: 400;
+            color: var(--color-midnight-ink);
+            margin: 0 0 var(--spacing-16) 0;
+        }
+
+        /* --- Social Icons --- */
+        .social-icons {
+            display: flex;
+            gap: var(--spacing-8);
+            margin-top: 0;
+        }
+
+        .social-icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-buttons);
+            background-color: transparent;
+            color: var(--color-midnight-ink);
+            text-decoration: none;
+            font-size: 20px;
+            transition: background-color 0.2s ease;
+        }
+
+        .social-icon-btn:hover {
+            background-color: var(--color-cloud-gray);
+        }
+
+        /* --- Links Section --- */
+        .links-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-16);
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-16) var(--spacing-24);
+            background-color: #f6f5f5;
+            border: 0px solid var(--color-midnight-ink);
+            border-radius: var(--radius-cards);
+            text-decoration: none;
+            color: var(--color-midnight-ink);
+            font-weight: 600;
+            /* Dibuat sedikit lebih tebal untuk font Plus Jakarta Sans */
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .link-card:hover {
+            background-color: var(--color-midnight-ink);
+            color: var(--color-canvas-white);
+        }
+
+        .link-card i {
+            font-size: 24px;
+            margin-right: var(--spacing-16);
+        }
+
+        .link-card .arrow-icon {
+            margin-left: auto;
+            margin-right: 0;
+            opacity: 0.5;
+        }
+
+        /* --- Contact Section --- */
+        .contact-section {
+            display: flex;
+            gap: var(--spacing-16);
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-8);
+            padding: 14px var(--spacing-24);
+            border-radius: var(--radius-buttons);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            font-family: var(--font-mono);
+        }
+
+        .btn-primary {
+            /* background-color: var(--color-midnight-ink); */
+            color: var(--color-midnight-ink)
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            /* background-color: var(--color-canvas-white); */
+            color: var(--color-midnight-ink);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-cloud-gray);
+        }
+
+
+        /* --- Cal.com Section --- */
+        .cal-section {
+            background-color: var(--color-cloud-gray);
+            border-radius: var(--radius-cards);
+            padding: var(--spacing-8);
+            overflow: hidden;
+        }
+
+        .cal-header {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--spacing-16);
+            padding: var(--spacing-16) var(--spacing-16) 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Animasi Pixel Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <main class="container">
+
+        <!-- 1. Profile Info -->
+        <header class="profile-section">
+            <div class="profile-info-wrapper">
+                <div class="profile-text-content">
+                    <h1 class="text-heading-sm">Akbar Putra Pai</h1>
+                    <p class="text-handle">Founder @ Paistudio - Top Rated+ on Upwork</p>
+                    <p class="text-body">Partnering with founders to build SaaS & automation products faster using AI and
+                        No-Code.
+                    </p>
+                    <div class="social-icons">
+                        <a href="https://linkedin.com/in/appai" target="_blank" class="social-icon-btn"
+                            aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://instagram.com/appai" target="_blank" class="social-icon-btn"
+                            aria-label="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://threads.net/@appai" target="_blank" class="social-icon-btn"
+                            aria-label="Threads">
+                            <i class="fa-brands fa-threads"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <img src="appai.png" alt="Akbar Putra" class="profile-img">
+            </div>
+        </header>
+
+        <!-- 3. Links Collection -->
+        <section class="links-section">
+            <a href="https://paistudio.co" class="link-card">
+                <i class="fa-solid fa-desktop"></i>
+                <span>Portfolio & Works</span>
+                <i class="fa-solid fa-arrow-up-right-from-square arrow-icon" style="font-size: 16px;"></i>
+            </a>
+            <a href="https://cal.com/paistudio/discovery-call" class="link-card">
+                <i class="fa-solid fa-calendar-week"></i>
+                <span>Book a Discovery Call</span>
+                <i class="fa-solid fa-arrow-up-right-from-square arrow-icon" style="font-size: 16px;"></i>
+            </a>
+        </section>
+
+        <!-- 4. Contact Buttons -->
+        <section class="contact-section">
+            <a href="mailto:hi@paistudio.co" class="btn-secondary">
+                <i class="fa-regular fa-envelope"></i> hi@paistudio.co
+            </a>
+            <a href="https://wa.me/6282233443399" class="btn-secondary btn-whatsapp" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i> +6282233443399
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Pixelated Animation Script -->
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        const dotSize = 2; // Dot diperkecil agar lebih tech-savvy / code-editor look
+        const spacing = 16; // Jarak diperlebar
+        let cols, rows;
+
+        // Array untuk nyala konstan (efek terminal kedip)
+        let activeTypingDots = [];
+
+        // Palet warna Tech-Savvy: dominan monochrome tegas dengan aksen "Digital Teal"
+        const activeColors = [
+            '#000000', // Midnight Ink (Hitam pekat)
+            '#406e7a', // Digital Teal (Aksen tech)
+            '#afaeae'  // Slate Gray (Abu-abu kode)
+        ];
+        
+        // Grid background sangat tipis seperti kertas blueprint/blueprint grid
+        const idleColor = 'rgba(0, 0, 0, 0.03)'; 
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            cols = Math.ceil(width / spacing);
+            rows = Math.ceil(height / spacing);
+        }
+
+        // Efek ketikan panjang seperti data streaming
+        function spawnTypingEffect() {
+            const numSpawns = Math.floor(Math.random() * 2) + 1;
+
+            for (let i = 0; i < numSpawns; i++) {
+                const y = Math.floor(Math.random() * rows);
+                const startX = Math.floor(Math.random() * (cols / 1.5)); // Mulai agak ke kiri
+                
+                // Panjang baris kode yang disimulasikan
+                const length = Math.floor(Math.random() * 30) + 10; 
+
+                for (let j = 0; j < length; j++) {
+                    if (startX + j >= cols) break;
+
+                    // Beri gap/spasi acak agar terlihat seperti sintaks kode
+                    if(Math.random() > 0.8) continue; 
+
+                    activeTypingDots.push({
+                        x: startX + j,
+                        y: y,
+                        color: activeColors[Math.floor(Math.random() * activeColors.length)],
+                        life: 1.0,
+                        decay: (Math.random() * 0.015) + 0.005, // Perlambat fade out agar jejak membekas
+                        delay: j * 2 // Ketikan lebih cepat
+                    });
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Gambar grid dasar (dot mati)
+            ctx.fillStyle = idleColor;
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    // Variasi kecil: sesekali dot dasar berbentuk kotak sangat tipis
+                    ctx.fillRect(x * spacing, y * spacing, 1, 1);
+                }
+            }
+
+            // Render dot yang aktif (diketik)
+            for (let i = activeTypingDots.length - 1; i >= 0; i--) {
+                let p = activeTypingDots[i];
+
+                if (p.delay > 0) {
+                    p.delay--;
+                    continue;
+                }
+
+                p.life -= p.decay;
+
+                if (p.life <= 0) {
+                    activeTypingDots.splice(i, 1);
+                } else {
+                    ctx.globalAlpha = p.life;
+                    ctx.fillStyle = p.color;
+                    
+                    // Dot menyala sedikit lebih besar dari dot grid (tech glow effect)
+                    ctx.fillRect(x = p.x * spacing, p.y * spacing, dotSize, dotSize);
+                }
+            }
+
+            ctx.globalAlpha = 1;
+
+            // Spawn baris kode baru (data stream) lebih sering
+            if (Math.random() < 0.15) {
+                spawnTypingEffect();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+
+        resize();
+        animate();
+    </script>
+
+</body>
+
+</html>
