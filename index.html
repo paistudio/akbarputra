@@ -389,111 +389,147 @@
         const ctx = canvas.getContext('2d');
 
         let width, height;
-        const dotSize = 2; // Dot diperkecil agar lebih tech-savvy / code-editor look
-        const spacing = 16; // Jarak diperlebar
-        let cols, rows;
+        const spacing = 16; // Jarak antar dot halftone
 
-        // Array untuk dot yang menyala membentuk pola/bentuk
-        let activeTypingDots = [];
-
-        // Palet warna Tech-Savvy: dominan monochrome tegas dengan aksen "Digital Teal"
-        const activeColors = [
-            '#000000', // Midnight Ink (Hitam pekat)
-            '#406e7a', // Digital Teal (Aksen tech)
-            '#afaeae'  // Slate Gray (Abu-abu kode)
+        // Dinosaurus Pixel Art (T-Rex)
+        // Frame 1: Kaki kanan di atas
+        const dinoFrame1 = [
+            "               11111111",
+            "              111111111",
+            "              111111111",
+            "              111011111",
+            "              111111111",
+            "              1111111  ",
+            "              11111    ",
+            "1      11     1111111  ",
+            "11    111111111111     ",
+            "111  1111111111111111  ",
+            " 1111111111111111      ",
+            "  11111111111111       ",
+            "    11111111111        ",
+            "      1111111          ",
+            "       11  11          ",
+            "       11   1          ",
+            "       11   11         ",
+            "      111              "
         ];
+
+        // Frame 2: Kaki kiri di atas
+        const dinoFrame2 = [
+            "               11111111",
+            "              111111111",
+            "              111111111",
+            "              111011111",
+            "              111111111",
+            "              1111111  ",
+            "              11111    ",
+            "1      11     1111111  ",
+            "11    111111111111     ",
+            "111  1111111111111111  ",
+            " 1111111111111111      ",
+            "  11111111111111       ",
+            "    11111111111        ",
+            "      1111111          ",
+            "       11  11          ",
+            "        1  11          ",
+            "        11  11         ",
+            "             111       "
+        ];
+
+        const frames = [dinoFrame1, dinoFrame2];
+        let currentFrameIdx = 0;
         
-        // Grid background sangat tipis seperti kertas blueprint/blueprint grid
-        const idleColor = 'rgba(0, 0, 0, 0.03)'; 
+        // Posisi dan pergerakan dinosaurus
+        let dinoX = 0;
+        let dinoY = 0; 
+        
+        // Target posisi dari mouse
+        let targetX = 0;
+        let targetY = 0;
+        
+        // Status orientasi
+        let isFacingRight = true;
 
-        // Definisi bentuk "Tangan Mengetik" (Representasi ASCII art sederhana)
-        // 1 = titik menyala, 0 = kosong
-        const handShape = [
-            [0,0,0,0,1,1,0,0,0,0,0,0],
-            [0,0,0,1,1,1,1,0,0,0,0,0],
-            [0,0,1,1,1,1,1,1,0,0,0,0],
-            [0,1,1,1,1,1,1,1,1,0,0,0],
-            [1,1,1,1,1,1,1,1,1,1,0,0],
-            [1,1,1,1,1,1,1,1,1,1,1,0],
-            [0,1,1,1,1,1,1,1,1,1,1,1],
-            [0,0,1,1,1,1,1,1,1,1,1,1],
-            [0,0,0,1,1,1,1,1,1,1,1,1],
-            [0,0,0,0,1,1,1,1,1,1,1,0],
-            [0,0,0,0,0,1,1,1,1,1,0,0],
-            [0,0,0,0,0,0,1,1,1,0,0,0]
-        ];
+        let frameCounter = 0;
+        const animationSpeed = 8; // Ganti frame setiap N iterasi
+        
+        // Konstanta untuk pergerakan dinamis (easing)
+        const easing = 0.05; // Seberapa cepat dino mengejar kursor
 
-        // Definisi bentuk "Layar/Monitor" (Representasi tech builder)
-        const monitorShape = [
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,1,0,1,1,1,0,1,1,0,0,0,0,1],
-            [1,0,1,0,0,1,0,0,0,1,0,0,0,0,0,1],
-            [1,0,1,1,0,1,1,1,0,1,0,1,1,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
-            [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0]
-        ];
+        // Mouse event listener
+        window.addEventListener('mousemove', (e) => {
+            // Konversi posisi pixel mouse ke kordinat grid
+            targetX = e.clientX / spacing;
+            targetY = (e.clientY / spacing) - (dinoFrame1.length / 2); // Pusatkan dino di kursor
+        });
 
-        const shapes = [handShape, monitorShape];
+        // Event touch untuk mobile
+        window.addEventListener('touchmove', (e) => {
+            if(e.touches.length > 0) {
+                targetX = e.touches[0].clientX / spacing;
+                targetY = (e.touches[0].clientY / spacing) - (dinoFrame1.length / 2);
+            }
+        });
 
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            cols = Math.ceil(width / spacing);
-            rows = Math.ceil(height / spacing);
+            
+            // Set Y position default jika mouse belum bergerak
+            const rows = Math.ceil(height / spacing);
+            if(targetX === 0 && targetY === 0) {
+                targetX = width / spacing / 2;
+                targetY = rows * 0.7;
+                dinoX = targetX;
+                dinoY = targetY;
+            }
         }
 
-        // Efek memunculkan bentuk secara bertahap (seperti dirender baris per baris)
-        function spawnShape() {
-            const shape = shapes[Math.floor(Math.random() * shapes.length)];
-            const shapeRows = shape.length;
-            const shapeCols = shape[0].length;
+        // Fungsi menggambar pola Halftone dasar
+        function drawHalftoneBackground() {
+            const cols = Math.ceil(width / spacing);
+            const rows = Math.ceil(height / spacing);
 
-            // Pastikan bentuk tidak keluar dari batas layar
-            const startX = Math.floor(Math.random() * (cols - shapeCols));
-            const startY = Math.floor(Math.random() * (rows - shapeRows));
-            
-            const color = activeColors[Math.floor(Math.random() * activeColors.length)];
-
-            for (let y = 0; y < shapeRows; y++) {
-                for (let x = 0; x < shapeCols; x++) {
-                    if (shape[y][x] === 1) {
-                        activeTypingDots.push({
-                            x: startX + x,
-                            y: startY + y,
-                            color: color,
-                            life: 1.0,
-                            decay: 0.005 + (Math.random() * 0.005), // Memudar perlahan
-                            delay: (y * 5) + (x * 2) // Efek render baris per baris dari atas kiri
-                        });
-                    }
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    // Gradien ukuran dot dari atas ke bawah untuk efek halftone
+                    const yRatio = y / rows;
+                    // Ukuran dot membesar ke bawah, tapi dibuat jauh lebih kecil
+                    const radius = 0.2 + (yRatio * 1.2); 
+                    
+                    ctx.beginPath();
+                    ctx.arc(x * spacing, y * spacing, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                    ctx.fill();
                 }
             }
         }
 
-        // Efek data stream biasa untuk mengisi background
-        function spawnDataStream() {
-            const numSpawns = Math.floor(Math.random() * 2) + 1;
-            for (let i = 0; i < numSpawns; i++) {
-                const y = Math.floor(Math.random() * rows);
-                const startX = Math.floor(Math.random() * (cols / 1.5)); 
-                const length = Math.floor(Math.random() * 20) + 5; 
+        // Fungsi menggambar Dinosaurus dengan dot besar (Halftone subject)
+        function drawDino() {
+            const frame = frames[currentFrameIdx];
+            const maxRadius = spacing * 0.15; // Dot dikecilkan lagi agar lebih halus
 
-                for (let j = 0; j < length; j++) {
-                    if (startX + j >= cols) break;
-                    if(Math.random() > 0.8) continue; 
-
-                    activeTypingDots.push({
-                        x: startX + j,
-                        y: y,
-                        color: activeColors[Math.floor(Math.random() * activeColors.length)],
-                        life: 1.0,
-                        decay: (Math.random() * 0.015) + 0.005, 
-                        delay: j * 2 
-                    });
+            for (let y = 0; y < frame.length; y++) {
+                const row = frame[y];
+                for (let x = 0; x < row.length; x++) {
+                    // Jika menghadap ke kiri, balik pembacaan x (flip horizontal)
+                    const pixelX = isFacingRight ? x : (row.length - 1 - x);
+                    
+                    if (row[pixelX] === '1') {
+                        // Posisi aktual di layar (grid)
+                        const gridX = Math.floor(dinoX) + x - (row.length / 2); // Pusatkan titik tumpu X
+                        const gridY = Math.floor(dinoY) + y;
+                        
+                        // Gambar hanya jika berada di dalam layar
+                        if (gridX >= -row.length && gridX * spacing < width + (row.length*spacing)) {
+                            ctx.beginPath();
+                            ctx.arc(gridX * spacing, gridY * spacing, maxRadius, 0, Math.PI * 2);
+                            // Warna dinosaurus (mengikuti aksen desain)
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
+                            ctx.fill();
+                        }
+                    }
                 }
             }
         }
@@ -501,42 +537,39 @@
         function animate() {
             ctx.clearRect(0, 0, width, height);
 
-            // Gambar grid dasar (dot mati)
-            ctx.fillStyle = idleColor;
-            for (let y = 0; y < rows; y++) {
-                for (let x = 0; x < cols; x++) {
-                    ctx.fillRect(x * spacing, y * spacing, 1, 1);
+            // 1. Gambar background halftone statis
+            drawHalftoneBackground();
+
+            // Hitung jarak ke target (mouse)
+            const dx = targetX - dinoX;
+            const dy = targetY - dinoY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Gerakkan Dinosaurus menggunakan Easing (interpolasi agar halus)
+            if (distance > 0.5) { // Hanya bergerak jika jarak cukup jauh
+                dinoX += dx * easing;
+                dinoY += dy * easing;
+
+                // Tentukan arah hadap dinosaurus berdasarkan arah X
+                if (dx > 0) {
+                    isFacingRight = true;
+                } else if (dx < 0) {
+                    isFacingRight = false;
                 }
+
+                // Animasi kaki hanya berjalan saat dinosaurus bergerak
+                frameCounter++;
+                if (frameCounter >= animationSpeed) {
+                    currentFrameIdx = (currentFrameIdx + 1) % frames.length;
+                    frameCounter = 0;
+                }
+            } else {
+                // Saat berhenti, kembalikan ke posisi berdiri (frame 1)
+                currentFrameIdx = 0;
             }
 
-            // Render dot yang aktif
-            for (let i = activeTypingDots.length - 1; i >= 0; i--) {
-                let p = activeTypingDots[i];
-
-                if (p.delay > 0) {
-                    p.delay--;
-                    continue;
-                }
-
-                p.life -= p.decay;
-
-                if (p.life <= 0) {
-                    activeTypingDots.splice(i, 1);
-                } else {
-                    ctx.globalAlpha = p.life;
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x * spacing, p.y * spacing, dotSize, dotSize);
-                }
-            }
-
-            ctx.globalAlpha = 1;
-
-            // Peluang memunculkan bentuk (Shape) vs Data stream biasa
-            if (Math.random() < 0.01) { // 1% kemungkinan per frame memunculkan bentuk besar
-                spawnShape();
-            } else if (Math.random() < 0.1) { // 10% kemungkinan memunculkan data stream biasa
-                spawnDataStream();
-            }
+            // 2. Gambar Dinosaurus yang berjalan
+            drawDino();
 
             requestAnimationFrame(animate);
         }
