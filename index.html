@@ -17,6 +17,52 @@
         rel="stylesheet">
 
     <style>
+        /* Import Font Delight */
+        @font-face {
+            font-family: 'Delight';
+            src: url('./font-delight/Web-PS/Delight-Light.woff2') format('woff2'),
+                 url('./font-delight/Web-PS/Delight-Light.otf') format('opentype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Delight';
+            src: url('./font-delight/Web-PS/Delight-Regular.woff2') format('woff2'),
+                 url('./font-delight/Web-PS/Delight-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Delight';
+            src: url('./font-delight/Web-PS/Delight-Medium.woff2') format('woff2'),
+                 url('./font-delight/Web-PS/Delight-Medium.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Delight';
+            src: url('./font-delight/Web-PS/Delight-SemiBold.woff2') format('woff2'),
+                 url('./font-delight/Web-PS/Delight-SemiBold.otf') format('opentype');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Delight';
+            src: url('./font-delight/Web-PS/Delight-Bold.woff2') format('woff2'),
+                 url('./font-delight/Web-PS/Delight-Bold.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             /* Colors */
             --color-midnight-ink: #000000;
@@ -28,6 +74,7 @@
             /* Typography */
             --font-primary: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
             --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            --font-display: 'Delight', var(--font-primary);
 
             /* Spacing & Layout */
             --spacing-8: 8px;
@@ -116,11 +163,12 @@
         }
 
         .text-heading-sm {
-            font-size: 32px;
+            font-size: 52px;
+            font-family: var(--font-display); /* Menggunakan font kustom Delight */
             line-height: 1.2;
             font-weight: 700;
-            letter-spacing: -0.04em;
             margin: 0 0 4px 0;
+            letter-spacing: -0.02em;
         }
 
         /* Username bergaya Threads (badge abu-abu kecil di samping atau bawah nama) */
@@ -137,9 +185,10 @@
         }
 
         .text-body {
-            font-size: 16px;
+            font-family: var(--font-display);
+            font-size: 24px;
             line-height: 1.5;
-            font-weight: 400;
+            font-weight: 500;
             color: var(--color-midnight-ink);
             margin: 0 0 var(--spacing-16) 0;
         }
@@ -185,7 +234,8 @@
             border-radius: var(--radius-cards);
             text-decoration: none;
             color: var(--color-midnight-ink);
-            font-weight: 600;
+            font-family: var(--font-display);
+            font-weight: 500;
             /* Dibuat sedikit lebih tebal untuk font Plus Jakarta Sans */
             font-size: 16px;
             transition: all 0.2s ease;
@@ -223,10 +273,11 @@
             padding: 14px var(--spacing-24);
             border-radius: var(--radius-buttons);
             text-decoration: none;
-            font-weight: 500;
             font-size: 16px;
             transition: all 0.2s ease;
-            font-family: var(--font-mono);
+            font-family: var(--font-display);
+            font-weight: 500;
+            letter-spacing: 0.05em;
         }
 
         .btn-primary {
@@ -280,6 +331,12 @@
                 <div class="profile-text-content">
                     <h1 class="text-heading-sm">Akbar Putra Pai.</h1>
                     <p class="text-handle">Founder @ Paistudio - Top Rated+ on Upwork</p>
+                </div>
+
+                <img src="appai.png" alt="Akbar Putra" class="profile-img">
+            </div>
+            <div class="profile-info-wrapper">
+                <div class="profile-text-content">
                     <p class="text-body">Partnering with founders to build SaaS & automation products faster using AI and
                         No-Code.
                     </p>
@@ -296,15 +353,26 @@
                             aria-label="Threads">
                             <i class="fa-brands fa-threads"></i>
                         </a>
+                        <a href="mailto:hi@paistudio.co" target="_blank" class="social-icon-btn"
+                            aria-label="Email">
+                            <i class="fa-regular fa-envelope"></i>
+                        </a>
+                        <a href="https://wa.me/6282233443399" target="_blank" class="social-icon-btn"
+                            aria-label="Whatsapp">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
                     </div>
                 </div>
-
-                <img src="appai.png" alt="Akbar Putra" class="profile-img">
             </div>
         </header>
 
         <!-- 3. Links Collection -->
         <section class="links-section">
+            <a href="https://www.upwork.com/freelancers/appai" class="link-card">
+                <i class="fa-brands fa-upwork"></i>
+                <span>Hire on Upwork</span>
+                <i class="fa-solid fa-arrow-up-right-from-square arrow-icon" style="font-size: 16px;"></i>
+            </a>
             <a href="https://paistudio.co" class="link-card">
                 <i class="fa-solid fa-desktop"></i>
                 <span>Portfolio & Works</span>
@@ -316,16 +384,6 @@
                 <i class="fa-solid fa-arrow-up-right-from-square arrow-icon" style="font-size: 16px;"></i>
             </a>
         </section>
-
-        <!-- 4. Contact Buttons -->
-        <section class="contact-section">
-            <a href="mailto:hi@paistudio.co" class="btn-secondary">
-                <i class="fa-regular fa-envelope"></i> Email
-            </a>
-            <a href="https://wa.me/6282233443399" class="btn-secondary btn-whatsapp" target="_blank">
-                <i class="fa-brands fa-whatsapp"></i> Whatsapp
-            </a>
-        </section> 
 
     </main>
 
@@ -339,7 +397,7 @@
         const spacing = 16; // Jarak diperlebar
         let cols, rows;
 
-        // Array untuk nyala konstan (efek terminal kedip)
+        // Array untuk dot yang menyala membentuk pola/bentuk
         let activeTypingDots = [];
 
         // Palet warna Tech-Savvy: dominan monochrome tegas dengan aksen "Digital Teal"
@@ -352,6 +410,39 @@
         // Grid background sangat tipis seperti kertas blueprint/blueprint grid
         const idleColor = 'rgba(0, 0, 0, 0.03)'; 
 
+        // Definisi bentuk "Tangan Mengetik" (Representasi ASCII art sederhana)
+        // 1 = titik menyala, 0 = kosong
+        const handShape = [
+            [0,0,0,0,1,1,0,0,0,0,0,0],
+            [0,0,0,1,1,1,1,0,0,0,0,0],
+            [0,0,1,1,1,1,1,1,0,0,0,0],
+            [0,1,1,1,1,1,1,1,1,0,0,0],
+            [1,1,1,1,1,1,1,1,1,1,0,0],
+            [1,1,1,1,1,1,1,1,1,1,1,0],
+            [0,1,1,1,1,1,1,1,1,1,1,1],
+            [0,0,1,1,1,1,1,1,1,1,1,1],
+            [0,0,0,1,1,1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1,1,1,1,0,0],
+            [0,0,0,0,0,0,1,1,1,0,0,0]
+        ];
+
+        // Definisi bentuk "Layar/Monitor" (Representasi tech builder)
+        const monitorShape = [
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,1,1,0,1,1,1,0,1,1,0,0,0,0,1],
+            [1,0,1,0,0,1,0,0,0,1,0,0,0,0,0,1],
+            [1,0,1,1,0,1,1,1,0,1,0,1,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
+            [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0]
+        ];
+
+        const shapes = [handShape, monitorShape];
+
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
@@ -359,21 +450,44 @@
             rows = Math.ceil(height / spacing);
         }
 
-        // Efek ketikan panjang seperti data streaming
-        function spawnTypingEffect() {
-            const numSpawns = Math.floor(Math.random() * 2) + 1;
+        // Efek memunculkan bentuk secara bertahap (seperti dirender baris per baris)
+        function spawnShape() {
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+            const shapeRows = shape.length;
+            const shapeCols = shape[0].length;
 
+            // Pastikan bentuk tidak keluar dari batas layar
+            const startX = Math.floor(Math.random() * (cols - shapeCols));
+            const startY = Math.floor(Math.random() * (rows - shapeRows));
+            
+            const color = activeColors[Math.floor(Math.random() * activeColors.length)];
+
+            for (let y = 0; y < shapeRows; y++) {
+                for (let x = 0; x < shapeCols; x++) {
+                    if (shape[y][x] === 1) {
+                        activeTypingDots.push({
+                            x: startX + x,
+                            y: startY + y,
+                            color: color,
+                            life: 1.0,
+                            decay: 0.005 + (Math.random() * 0.005), // Memudar perlahan
+                            delay: (y * 5) + (x * 2) // Efek render baris per baris dari atas kiri
+                        });
+                    }
+                }
+            }
+        }
+
+        // Efek data stream biasa untuk mengisi background
+        function spawnDataStream() {
+            const numSpawns = Math.floor(Math.random() * 2) + 1;
             for (let i = 0; i < numSpawns; i++) {
                 const y = Math.floor(Math.random() * rows);
-                const startX = Math.floor(Math.random() * (cols / 1.5)); // Mulai agak ke kiri
-                
-                // Panjang baris kode yang disimulasikan
-                const length = Math.floor(Math.random() * 30) + 10; 
+                const startX = Math.floor(Math.random() * (cols / 1.5)); 
+                const length = Math.floor(Math.random() * 20) + 5; 
 
                 for (let j = 0; j < length; j++) {
                     if (startX + j >= cols) break;
-
-                    // Beri gap/spasi acak agar terlihat seperti sintaks kode
                     if(Math.random() > 0.8) continue; 
 
                     activeTypingDots.push({
@@ -381,8 +495,8 @@
                         y: y,
                         color: activeColors[Math.floor(Math.random() * activeColors.length)],
                         life: 1.0,
-                        decay: (Math.random() * 0.015) + 0.005, // Perlambat fade out agar jejak membekas
-                        delay: j * 2 // Ketikan lebih cepat
+                        decay: (Math.random() * 0.015) + 0.005, 
+                        delay: j * 2 
                     });
                 }
             }
@@ -395,12 +509,11 @@
             ctx.fillStyle = idleColor;
             for (let y = 0; y < rows; y++) {
                 for (let x = 0; x < cols; x++) {
-                    // Variasi kecil: sesekali dot dasar berbentuk kotak sangat tipis
                     ctx.fillRect(x * spacing, y * spacing, 1, 1);
                 }
             }
 
-            // Render dot yang aktif (diketik)
+            // Render dot yang aktif
             for (let i = activeTypingDots.length - 1; i >= 0; i--) {
                 let p = activeTypingDots[i];
 
@@ -416,17 +529,17 @@
                 } else {
                     ctx.globalAlpha = p.life;
                     ctx.fillStyle = p.color;
-                    
-                    // Dot menyala sedikit lebih besar dari dot grid (tech glow effect)
-                    ctx.fillRect(x = p.x * spacing, p.y * spacing, dotSize, dotSize);
+                    ctx.fillRect(p.x * spacing, p.y * spacing, dotSize, dotSize);
                 }
             }
 
             ctx.globalAlpha = 1;
 
-            // Spawn baris kode baru (data stream) lebih sering
-            if (Math.random() < 0.15) {
-                spawnTypingEffect();
+            // Peluang memunculkan bentuk (Shape) vs Data stream biasa
+            if (Math.random() < 0.01) { // 1% kemungkinan per frame memunculkan bentuk besar
+                spawnShape();
+            } else if (Math.random() < 0.1) { // 10% kemungkinan memunculkan data stream biasa
+                spawnDataStream();
             }
 
             requestAnimationFrame(animate);
